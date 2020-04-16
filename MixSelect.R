@@ -771,7 +771,6 @@ MixSelect = function(y, X , Z = NULL,
                   l = l_st,
                   Omega = Omega_st,
                   Omega_01 = Omega_01,
-                  y_pred = y_pred,
                   y_hat = y_hat)
   
   if(na){
