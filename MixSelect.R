@@ -771,7 +771,8 @@ MixSelect = function(y, X , Z = NULL,
                   l = l_st,
                   Omega = Omega_st,
                   Omega_01 = Omega_01,
-                  y_hat = y_hat)
+                  y_hat = y_hat,
+                  X = X)
   
   if(na){
     ret_list[["Lambda"]] = Lambda_st
