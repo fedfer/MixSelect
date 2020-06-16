@@ -101,6 +101,8 @@ MixSelect = function(y, X , Z = NULL,
   Omega_st = array(0,c(S,p,p))
   Omega_01 = array(0,c(S,p,p))
   Lambda_st = array(0,c(S,p,k_na))
+  eta_st = array(0,c(S,n,k_na))
+  ps_st = array(0,c(S,p))
   
   # --- initial values --- #
   pi_prob = 0.5; pi_int = 0.1
@@ -751,6 +753,13 @@ MixSelect = function(y, X , Z = NULL,
           
       mu = Z%*%beta_z + X%*%beta + X_int%*%lambda
       y_hat[count,] = mu + PKPt_12_train%*%Sig_22_inv_train%*%(y-mu)
+      
+      if(na){
+        Lambda_st[s,,] = Lambda_na
+        eta_st[s,,] = eta_na
+        ps_st[s,] = ps_na
+        
+      }
 
       count = count + 1
       
@@ -772,12 +781,21 @@ MixSelect = function(y, X , Z = NULL,
                   Omega = Omega_st,
                   Omega_01 = Omega_01,
                   y_hat = y_hat,
-                  X = X)
+                  X = X,
+                  y = y)
   
   if(na){
     ret_list[["Lambda"]] = Lambda_st
+    ret_list[["eta"]] = eta_st
+    ret_list[["ps"]] = ps_st
+    ret_list[["k_na"]] = k_na
+    ret_list[["list_na"]] = list_na
   }
   
+  if(lod){
+    ret_list[["X_lod"]] = X_lod
+    ret_list[["lod_vec"]] = lod_vec
+  }
   return(ret_list)
   
   
