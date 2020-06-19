@@ -1,4 +1,4 @@
-rootdir = dirname(sys.frame(1)$ofile)
+rootdir = dirname(rstudioapi::getSourceEditorContext()$path)
 funcdir = file.path(rootdir, "functions")
 files = sapply(list.files(funcdir), 
                function(x) {file.path(rootdir, "functions", x)})
