@@ -9,7 +9,7 @@ update_sigmasq = function(params, constants) {
   sigmasq_star = rgamma(1, shape = sigmasq^2/sigmasq_jump^2, 
                         rate = sigmasq/sigmasq_jump^2)
   CI_star = PCPt + diag(n)*sigmasq_star
-  chol = chol(CI_star)
+  chol = chol(CI_star + 0.01*diag(1, nrow = nrow(CI_star)))
   logdetCI_star = 2*as.numeric(sum(log((diag(chol)))))
   CI_inv_star = chol2inv(chol)
   
