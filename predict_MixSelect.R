@@ -7,6 +7,7 @@ predict_MixSelect = function(gibbs, X_test = NULL, Z_test = NULL,
   # X and y from gibbs object
   X = gibbs$X
   y = gibbs$y
+  Z = gibbs$Z
   
   # interactions
   X_int = model.matrix(y~.^2 - 1,as.data.frame(X))
@@ -18,11 +19,11 @@ predict_MixSelect = function(gibbs, X_test = NULL, Z_test = NULL,
   if(ncol(gibbs$beta) != p) stop("Mismatching number of columns in X and X_test")
   
   y_test = numeric(n_test)
-  X_int_test = model.matrix(y_test~.^2 - 1,as.data.frame(X_test))
-  X_int_test = X_int_test[,(p+1):ncol(X_int)]
+  X_int_test = model.matrix(y_test~.^2 - 1, as.data.frame(X_test))
+  X_int_test = X_int_test[,(p+1):ncol(X_int_test)]
   
   if(is.null(Z_test)) Z_test = matrix(0, nrow = n_test, ncol = 1)
-  if(gibbs$beta_z != ncol(Z_test)) stop("Mismatching number of columns in Z and Z_test")
+  if(ncol(gibbs$beta_z) != ncol(Z_test)) stop("Mismatching number of columns in Z and Z_test")
   
   S = nrow(gibbs$beta)
   N = n_test + nrow(X)
@@ -94,8 +95,8 @@ predict_MixSelect = function(gibbs, X_test = NULL, Z_test = NULL,
     PKPt_12 = PKPt_big[1:n_test,(n_test+1):N] 
     Sig_22_inv = solve(PKPt_big[(n_test+1):N,(n_test+1):N])
 
-    mu_pred = Z_test%*%beta_z + X_test%*%gibbs$beta[s,] + X_int_test%*%gibbs$lambda[s,]
-    mu = Z%*%beta_z + X%*%beta + X_int%*%lambda
+    mu_pred = Z_test%*%gibbs$beta_z[s,] + X_test%*%gibbs$beta[s,] + X_int_test%*%gibbs$lambda[s,]
+    mu = Z%*%gibbs$beta_z[s,] + X%*%gibbs$beta[s,] + X_int%*%gibbs$lambda[s,]
     
     y_pred[s,] = mu_pred + PKPt_12%*%Sig_22_inv%*%(y-mu)
   }
